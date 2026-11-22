@@ -25,8 +25,7 @@ A Microsoft Power Apps canvas application, backed by Microsoft Dataverse and bui
 9. [Application workflow](#9-application-workflow)
 10. [Installation and setup](#10-installation-and-setup)
 11. [Repository structure](#11-repository-structure)
-12. [Screenshots](#12-screenshots)
-13. [Documentation](#14-documentation)
+
 
 
 ---
@@ -201,19 +200,6 @@ Leave-Request-and-Approval-Management-System/
     └── validate_repository.py
 ```
 
-
-## 12. Documentation
-| Document | Content |
-|---|---|
-| [Architecture](docs/architecture.md) | layers, components, data flow, design decisions |
-| [Dataverse tables](docs/dataverse-tables.md) | data dictionary, choices, relationships, ER diagram |
-| [Employee leave request submission](docs/employee-leave-request-submission.md) | screen, procedure, validation rules, data written |
-| [Manager approval and rejection](docs/manager-approval-and-rejection.md) | dashboard, approval and rejection logic |
-| [Leave balance management](docs/leave-balance-management.md) | rules, formulas, worked example, safeguards |
-| [Power Fx formulas](docs/power-fx-formulas.md) | every key formula with explanation |
-| [Application workflow](docs/application-workflow.md) | state and sequence diagrams |
-| [Security and roles](docs/security-and-roles.md) | authentication, security roles |
-| [Setup guide](docs/setup-guide.md) | installation and configuration |
 
 
 
