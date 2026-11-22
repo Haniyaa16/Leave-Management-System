@@ -1,0 +1,131 @@
+ManagerApproval As screen:
+    Fill: =RGBA(244, 246, 250, 1)
+    OnVisible: =Refresh('Leave Requests')
+
+    btnBack As button:
+        Text: ="< My requests"
+        OnSelect: =Navigate(LeaveRequests, ScreenTransition.Fade)
+        X: =24
+        Y: =16
+        Width: =160
+        Height: =40
+
+    lblTitle As label:
+        Text: ="Manager Approval"
+        FontSize: =22
+        FontWeight: =FontWeight.Bold
+        X: =200
+        Y: =12
+        Width: =400
+        Height: =44
+
+    lblPendingCount As label:
+        Text: |-
+            ="Pending: " & CountRows(Filter('Leave Requests', Manager.'Primary Email' = User().Email, 'Leave Status' = 'LMS Leave Status'.Pending))
+        X: =24
+        Y: =76
+        Width: =(Parent.Width - 48) / 3 - 12
+        Height: =60
+        Fill: =RGBA(255, 244, 206, 1)
+        Align: =Align.Center
+
+    lblApprovedCount As label:
+        Text: |-
+            ="Approved: " & CountRows(Filter('Leave Requests', Manager.'Primary Email' = User().Email, 'Leave Status' = 'LMS Leave Status'.Approved))
+        X: =24 + 1 * ((Parent.Width - 48) / 3)
+        Y: =76
+        Width: =lblPendingCount.Width
+        Height: =60
+        Fill: =RGBA(223, 246, 221, 1)
+        Align: =Align.Center
+
+    lblRejectedCount As label:
+        Text: |-
+            ="Rejected: " & CountRows(Filter('Leave Requests', Manager.'Primary Email' = User().Email, 'Leave Status' = 'LMS Leave Status'.Rejected))
+        X: =24 + 2 * ((Parent.Width - 48) / 3)
+        Y: =76
+        Width: =lblPendingCount.Width
+        Height: =60
+        Fill: =RGBA(252, 228, 236, 1)
+        Align: =Align.Center
+
+    ddView As dropdown:
+        Items: =["Pending", "Approved", "Rejected", "All"]
+        X: =24
+        Y: =152
+        Width: =240
+
+    galRequests As gallery.galleryVertical:
+        Items: =Sort(Filter('Leave Requests', Manager.'Primary Email' = User().Email, Employee.'Primary Email' <> User().Email, ddView.Selected.Value = "All" || 'Leave Status'.Value = ddView.Selected.Value), 'Start Date', SortOrder.Ascending)
+        TemplateSize: =150
+        X: =24
+        Y: =196
+        Width: =Parent.Width - 48
+        Height: =Parent.Height - 220
+
+        lblEmployee As label:
+            Text: =ThisItem.Employee.'Full Name' & " - " & ThisItem.'Leave Type'.Value & " leave (" & ThisItem.'Days Requested' & " days)"
+            FontWeight: =FontWeight.Semibold
+            X: =8
+            Y: =6
+            Width: =Parent.TemplateWidth - 16
+            Height: =30
+
+        lblDates As label:
+            Text: |-
+                =Text(ThisItem.'Start Date', "ddd dd mmm") & " to " & Text(ThisItem.'End Date', "ddd dd mmm yyyy") & "   |   Status: " & ThisItem.'Leave Status'.Value
+            X: =8
+            Y: =36
+            Width: =Parent.TemplateWidth - 16
+            Height: =28
+
+        lblReason As label:
+            Text: |-
+                ="Reason: " & ThisItem.Reason
+            X: =8
+            Y: =64
+            Width: =Parent.TemplateWidth - 16
+            Height: =28
+
+        txtRowComment As text:
+            HintText: ="Comment (required to reject)"
+            Default: =Coalesce(ThisItem.'Manager Comments', "")
+            DisplayMode: =If(ThisItem.'Leave Status' = 'LMS Leave Status'.Pending, DisplayMode.Edit, DisplayMode.View)
+            X: =8
+            Y: =96
+            Width: =Parent.TemplateWidth - 280
+            Height: =40
+
+        btnApprove As button:
+            Text: ="Approve"
+            Visible: =ThisItem.'Leave Status' = 'LMS Leave Status'.Pending
+            OnSelect: |-
+                =With({bal: LookUp('Leave Balances', Employee.'Primary Email' = ThisItem.Employee.'Primary Email' && 'Balance Year' = Year(ThisItem.'Start Date')), isAnnual: ThisItem.'Leave Type'.Value = "Annual"},
+                    If(isAnnual && (IsBlank(bal) || bal.'Annual Leave Balance' < ThisItem.'Days Requested'),
+                        Notify("Cannot approve: the employee does not have enough annual leave balance.", NotificationType.Error),
+                        Patch('Leave Requests', ThisItem, {'Leave Status': 'LMS Leave Status'.Approved, 'Manager Comments': txtRowComment.Text, 'Decision On': Now(), 'Balance Deducted': isAnnual});
+                        If(!IsEmpty(Errors('Leave Requests')),
+                            Notify(First(Errors('Leave Requests')).Message, NotificationType.Error),
+                            If(isAnnual,
+                                Patch('Leave Balances', bal, {'Annual Leave Balance': bal.'Annual Leave Balance' - ThisItem.'Days Requested', 'Total Used': bal.'Total Used' + ThisItem.'Days Requested', 'Remaining Balance': bal.'Remaining Balance' - ThisItem.'Days Requested'});
+                                If(!IsEmpty(Errors('Leave Balances')),
+                                    Patch('Leave Requests', ThisItem, {'Leave Status': 'LMS Leave Status'.Pending, 'Balance Deducted': false});
+                                    Notify("The balance could not be updated, so the approval was undone: " & First(Errors('Leave Balances')).Message, NotificationType.Error),
+                                    Notify("Request approved and annual leave balance updated.", NotificationType.Success)),
+                                Notify("Request approved. Sick and Other leave do not change the annual balance.", NotificationType.Success)))))
+            X: =Parent.TemplateWidth - 264
+            Y: =96
+            Width: =120
+            Height: =40
+
+        btnReject As button:
+            Text: ="Reject"
+            Visible: =ThisItem.'Leave Status' = 'LMS Leave Status'.Pending
+            DisplayMode: =If(IsBlank(Trim(txtRowComment.Text)), DisplayMode.Disabled, DisplayMode.Edit)
+            OnSelect: |-
+                =Patch('Leave Requests', ThisItem, {'Leave Status': 'LMS Leave Status'.Rejected, 'Manager Comments': txtRowComment.Text, 'Decision On': Now(), 'Balance Deducted': false});
+                If(IsEmpty(Errors('Leave Requests')), Notify("Request rejected.", NotificationType.Information), Notify(First(Errors('Leave Requests')).Message, NotificationType.Error))
+            X: =Parent.TemplateWidth - 136
+            Y: =96
+            Width: =120
+            Height: =40

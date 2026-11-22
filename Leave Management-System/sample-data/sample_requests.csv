@@ -1,0 +1,8 @@
+employee_email,type,start,end,days,reason,status,comments,decided_on
+fatima@YOURTENANT.onmicrosoft.com,Annual,2026-12-21,2026-12-24,4,Family trip for the holidays,Pending,,
+fatima@YOURTENANT.onmicrosoft.com,Annual,2026-08-10,2026-08-14,5,Summer vacation,Approved,Approved. Enjoy the break.,2026-08-03
+joel@YOURTENANT.onmicrosoft.com,Sick,2026-11-10,2026-11-11,2,Fever and doctor advised bed rest,Approved,Get well soon.,2026-11-09
+joel@YOURTENANT.onmicrosoft.com,Annual,2026-12-28,2027-01-01,5,Year-end break,Pending,,
+joel@YOURTENANT.onmicrosoft.com,Annual,2026-07-06,2026-07-10,5,Family trip to Goa,Approved,Approved.,2026-06-29
+meera@YOURTENANT.onmicrosoft.com,Others,2026-12-02,2026-12-02,1,Attending a cousin's wedding,Rejected,Project deadline on that day; please reschedule.,2026-11-25
+arun@YOURTENANT.onmicrosoft.com,Annual,2026-11-24,2026-11-27,4,Personal travel,Approved,Approved.,2026-11-18

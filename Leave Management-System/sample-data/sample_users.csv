@@ -1,0 +1,6 @@
+name,email,manager_email,year,annual,sick,other,used
+Priya Nair,priya@YOURTENANT.onmicrosoft.com,,2026,24,10,5,0
+Arun Menon,arun@YOURTENANT.onmicrosoft.com,priya@YOURTENANT.onmicrosoft.com,2026,20,8,4,4
+Fatima Rahman,fatima@YOURTENANT.onmicrosoft.com,arun@YOURTENANT.onmicrosoft.com,2026,18,9,5,5
+Joel Thomas,joel@YOURTENANT.onmicrosoft.com,arun@YOURTENANT.onmicrosoft.com,2026,15,10,5,5
+Meera Das,meera@YOURTENANT.onmicrosoft.com,priya@YOURTENANT.onmicrosoft.com,2026,22,10,5,0
