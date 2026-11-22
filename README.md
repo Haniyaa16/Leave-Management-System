@@ -5,8 +5,6 @@ A Microsoft Power Apps canvas application, backed by Microsoft Dataverse and bui
 | | |
 |---|---|
 | **Project title** | Leave Request & Approval Management System |
-| **Programme** | Master of Computer Applications (MCA) |
-| **Institution** | AWH Engineering College, Kuttikatoor (APJ Abdul Kalam Technological University - KTU) |
 | **Author** | Haniya |
 | **Platform** | Microsoft Power Apps (canvas app), Microsoft Dataverse |
 | **Language** | Power Fx (formulas), Python (Dataverse set-up scripts) |
